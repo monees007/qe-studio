@@ -1,0 +1,40 @@
+&CONTROL
+  calculation   = 'vc-relax'
+  outdir        = './tmp/'
+  pseudo_dir    = './pseudo/'
+  prefix        = 'mgo'
+  etot_conv_thr = 2e-05
+  forc_conv_thr = 0.0005
+  tstress       = .true.
+  tprnfor       = .true.
+/
+&SYSTEM
+  ibrav       = 0
+  nat         = 2
+  ntyp        = 2
+  ecutwfc     = 30.0
+  ecutrho     = 120.0
+  occupations = 'fixed'
+/
+&ELECTRONS
+  conv_thr = 4e-10
+/
+&IONS
+  ion_dynamics = 'bfgs'
+/
+&CELL
+  cell_dynamics  = 'bfgs'
+  press_conv_thr = 0.5
+/
+ATOMIC_SPECIES
+  Mg  24.305  Mg.pbe-tm-test.UPF
+  O  15.999  O.pbe-tm-test.UPF
+ATOMIC_POSITIONS {crystal}
+  Mg              0.0             0.0             0.0
+  O              -0.5             0.5             0.5
+K_POINTS {automatic}
+  3 3 3 0 0 0
+CELL_PARAMETERS {angstrom}
+  0.0  2.15  2.15
+  2.15  0.0  2.15
+  2.15  2.15  0.0

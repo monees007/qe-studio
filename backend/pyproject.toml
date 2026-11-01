@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qe-studio"
+version = "1.0.0"
+description = "QE Studio: web workbench for Quantum ESPRESSO (structures, inputs, remote runs, analysis)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Not yet licensed; see NOTICE in the repository root" }
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "sqlalchemy>=2.0",
+    "python-multipart>=0.0.9",
+    "orjson>=3.10",
+    "httpx>=0.27",
+    "websockets>=12",
+    "asyncssh>=2.17",
+    "ase>=3.23",
+    "spglib>=2.4",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "scikit-image>=0.22",
+    "zstandard>=0.22",
+    "keyring>=24",
+    "anthropic>=0.40",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23", "jupyter_server>=2.10", "ipykernel>=6"]
+
+[project.scripts]
+qe-studio = "qestudio.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["qestudio*"]
+
+[tool.setuptools.package-data]
+"qestudio.data" = ["*.json", "*.py", "*.sh"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = [
+    # third-party code not yet updated for NumPy 2.5 (ase, scikit-image); not actionable here
+    "ignore:Setting the shape on a NumPy array:DeprecationWarning:ase.*",
+    "ignore:Setting the shape on a NumPy array:DeprecationWarning:skimage.*",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["tools/gen_schema.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "PL", "C4"]
+ignore = [
+  "PLR0911", "PLR0912", "PLR0913", "PLR0915", "PLR2004",  # complexity / magic numbers: parsers are long by nature
+  "PLW0603",  # module-level singletons (engine, pool) are intentional
+  "PLC0415",  # local imports keep start-up fast and avoid cycles
+  "B008",     # FastAPI Depends/File in defaults
+  "RUF001", "RUF002", "RUF003",  # unicode symbols (Å, Γ) in strings/docs are intentional
+  "SIM108", "SIM102", "SIM105",  # try/except/pass is clearer than contextlib.suppress here
+  "PLR0917", "B905",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["PLR2004", "S101", "B017"]
+# files that embed shell/Python scripts executed on the target
+"qestudio/jobs/runner.py" = ["E501"]
+"qestudio/executors/jupyter.py" = ["E501"]
+"qestudio/qe_setup.py" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_ignores = true
+check_untyped_defs = false

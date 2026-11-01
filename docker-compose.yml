@@ -1,0 +1,18 @@
+# docker compose up -d   ->  open http://localhost:8765
+services:
+  qe-studio:
+    build: .
+    image: qe-studio:latest
+    ports:
+      - "127.0.0.1:8765:8765" # loopback only: the API can run commands on your connections
+    volumes:
+      - qes-data:/data
+      # mount your SSH keys read-only if you use key authentication:
+      # - ~/.ssh:/home/qes/.ssh:ro
+    environment:
+      # QES_AI_DISABLED: "1"      # hard-disable every AI feature
+      QES_ALLOWED_HOSTS: "localhost,127.0.0.1"
+    restart: unless-stopped
+
+volumes:
+  qes-data:
