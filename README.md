@@ -146,7 +146,7 @@ answers can be wrong: verify them.
 - [CONTRIBUTING.md](CONTRIBUTING.md): development setup, commands, coding standards, tests.
 - API reference: `http://127.0.0.1:8765/api/docs` (OpenAPI) while QE Studio is running.
 
-## Citing the science behind it
+## Citations
 
 If you publish results obtained with QE Studio, cite the codes and data you actually used, in
 particular:
